@@ -6,7 +6,8 @@ import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/l
 if (typeof Telegram !== "undefined" && Telegram.WebApp) {
     Telegram.WebApp.ready(); // Сообщаем Telegram, что WebApp готов
     Telegram.WebApp.expand(); // Расширяем WebApp на весь экран
-    console.log("Telegram WebApp API initialized successfully.");
+} else {
+    console.warn("Telegram WebApp API is not доступен. Проверьте окружение.");
 }
 
 // Настройка Three.js сцены
