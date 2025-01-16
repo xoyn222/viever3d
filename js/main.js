@@ -30,7 +30,7 @@ let mixer;
 // Загрузка модели
 const loader = new GLTFLoader();
 loader.load(
-    'models/girl2/scene.gltf',
+    'models/hoodi/ATV2 BW for MiniApp 2.gltf',
     (gltf) => {
         const model = gltf.scene;
 
