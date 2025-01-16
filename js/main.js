@@ -2,20 +2,20 @@ import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module
 import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
 
-// Telegram WebApp initialization
+// Инициализация Telegram WebApp
 if (typeof Telegram !== "undefined" && Telegram.WebApp) {
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
+    Telegram.WebApp.ready(); // Сообщаем Telegram, что WebApp готов
+    Telegram.WebApp.expand(); // Расширяем WebApp на весь экран
 }
 
-// Set up the scene, camera, and renderer
+// Настройка Three.js сцены
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Lighting
+// Освещение
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
 scene.add(ambientLight);
 
@@ -23,16 +23,16 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(5, 10, 7.5);
 scene.add(directionalLight);
 
-// Load GLTF model
-const loader = new GLTFLoader();
 let mixer;
 
+// Загрузка модели
+const loader = new GLTFLoader();
 loader.load(
     'models/girl2/scene.gltf',
     (gltf) => {
         const model = gltf.scene;
 
-        // Center the model
+        // Центрирование модели
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
@@ -41,15 +41,16 @@ loader.load(
         model.position.y -= center.y;
         model.position.z -= center.z;
 
+        // Установка камеры
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = camera.fov * (Math.PI / 180);
         const cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-        camera.position.set(0, 0, cameraZ * 1.5); // Adjust the multiplier as needed
+        camera.position.set(0, 0, cameraZ * 1.5); // Настройка масштаба
         camera.lookAt(0, 0, 0);
 
         scene.add(model);
 
-        // Play animations
+        // Анимация модели (если есть)
         if (gltf.animations && gltf.animations.length > 0) {
             mixer = new THREE.AnimationMixer(model);
             const action = mixer.clipAction(gltf.animations[0]);
@@ -64,18 +65,18 @@ loader.load(
     }
 );
 
-// Add orbit controls
+// Управление камерой
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.update();
 
-// Handle window resizing
+// Обработка изменения размера окна
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Animation loop
+// Анимация сцены
 const clock = new THREE.Clock();
 
 const animate = () => {

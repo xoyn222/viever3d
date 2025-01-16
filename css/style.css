@@ -3,3 +3,7 @@ body {
   background-color: #000;
 }
 
+#container3D canvas {
+  width: 100vw !important;
+  height: 100vh !important;
+}
