@@ -7,7 +7,7 @@ if (typeof Telegram !== "undefined" && Telegram.WebApp) {
     Telegram.WebApp.ready(); // Сообщаем Telegram, что WebApp готов
     Telegram.WebApp.expand(); // Расширяем WebApp на весь экран
 } else {
-    console.warn("Telegram WebApp API is not доступен. Проверьте окружение.");
+    console.warn("Telegram WebApp API is не доступен. Проверьте окружение.");
 }
 
 // Настройка Three.js сцены
@@ -27,10 +27,19 @@ scene.add(directionalLight);
 
 let mixer;
 
+// Управление камерой
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.update();
+
+// Ограничение приближения камеры
+let minDistance = 1; // По умолчанию минимальное расстояние
+controls.minDistance = minDistance;
+controls.maxDistance = 100; // Максимальное расстояние (можно настроить)
+
 // Загрузка модели
 const loader = new GLTFLoader();
 loader.load(
-    'models/hoodi/ATV2 BW for MiniApp 2.gltf',
+    'models/dante/scene.gltf',
     (gltf) => {
         const model = gltf.scene;
 
@@ -43,8 +52,12 @@ loader.load(
         model.position.y -= center.y;
         model.position.z -= center.z;
 
-        // Установка камеры
+        // Установка минимального расстояния для приближения камеры
         const maxDim = Math.max(size.x, size.y, size.z);
+        minDistance = maxDim * 0.8; // Ограничение на основе размера модели
+        controls.minDistance = minDistance;
+
+        // Установка камеры
         const fov = camera.fov * (Math.PI / 180);
         const cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
         camera.position.set(0, 0, cameraZ * 1.5);
@@ -66,10 +79,6 @@ loader.load(
         console.error('An error occurred while loading the model:', error);
     }
 );
-
-// Управление камерой
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.update();
 
 // Обработка изменения размера окна
 window.addEventListener('resize', () => {
