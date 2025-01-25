@@ -12,17 +12,35 @@ if (typeof Telegram !== "undefined" && Telegram.WebApp) {
 
 // Настройка Three.js сцены
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x2f2f2f); // Серый фон сцены
+
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 document.getElementById("container3D").appendChild(renderer.domElement);
 
-// Освещение
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+// Студийное освещение
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3); // Мягкий окружающий свет
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(5, 10, 7.5);
+const spotLight1 = new THREE.SpotLight(0xffffff, 1.2);
+spotLight1.position.set(10, 20, 10);
+spotLight1.castShadow = true;
+spotLight1.shadow.mapSize.width = 2048;
+spotLight1.shadow.mapSize.height = 2048;
+scene.add(spotLight1);
+
+const spotLight2 = new THREE.SpotLight(0xffffff, 0.8);
+spotLight2.position.set(-10, 20, 10);
+spotLight2.castShadow = true;
+scene.add(spotLight2);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+directionalLight.position.set(5, 10, -5);
+directionalLight.castShadow = true;
+directionalLight.shadow.mapSize.width = 2048;
+directionalLight.shadow.mapSize.height = 2048;
 scene.add(directionalLight);
 
 let mixer;
@@ -48,7 +66,7 @@ loader.load(
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
 
-        model.position.x -= center.x;
+        model.position.x -= 0.3;
         model.position.y -= center.y;
         model.position.z -= center.z;
 
