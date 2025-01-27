@@ -45,3 +45,18 @@ html, body {
   font-size: 1.5em;
   font-family: Arial, sans-serif;
 }
+
+@keyframes dots-animation {
+  0% {
+    content: ".";
+  }
+  33% {
+    content: "..";
+  }
+  66% {
+    content: "...";
+  }
+  100% {
+    content: "";
+  }
+}

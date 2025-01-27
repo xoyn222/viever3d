@@ -57,6 +57,26 @@ controls.maxDistance = 4;
 
 const loadingScreen = document.getElementById("loading-screen");
 const loadingMessage = document.getElementById("loading-message");
+const dotsElement = document.querySelector(".dots");
+let loadingDotsInterval;
+
+// Start the circular dots animation
+const startLoadingDotsAnimation = () => {
+    const dotsArray = ["", ".", "..", "..."];
+    let index = 0;
+    loadingDotsInterval = setInterval(() => {
+        dotsElement.textContent = dotsArray[index];
+        index = (index + 1) % dotsArray.length;
+    }, 500); // Change every 500ms
+};
+
+// Stop the dots animation
+const stopLoadingDotsAnimation = () => {
+    clearInterval(loadingDotsInterval);
+};
+
+// Start animation
+startLoadingDotsAnimation();
 
 // Загрузка модели
 const loader = new GLTFLoader();
@@ -111,20 +131,16 @@ loader.load(
         }
 
         // Убираем загрузочный экран после полной загрузки
+        stopLoadingDotsAnimation();
         loadingScreen.style.display = "none";
     },
     (xhr) => {
-        // Проверяем xhr.total перед вычислением процентов
-        if (xhr.total) {
-            const percentLoaded = (xhr.loaded / xhr.total * 100).toFixed(2);
-            loadingMessage.textContent = `${percentLoaded}%`;
-        } else {
-            loadingMessage.textContent = "0%";
-        }
+        loadingMessage.textContent = `LOADING${dotsElement.textContent}`;
     },
     (error) => {
         console.error("An error occurred while loading the model:", error);
         loadingMessage.textContent = "Error loading the model.";
+        stopLoadingDotsAnimation();
     }
 );
 
