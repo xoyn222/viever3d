@@ -61,13 +61,21 @@ const dotsElement = document.querySelector(".dots");
 let loadingDotsInterval;
 
 // Start the circular dots animation
+
+
 const startLoadingDotsAnimation = () => {
+    console.log("Запуск анимации точек.");
     const dotsArray = ["", ".", "..", "..."];
     let index = 0;
     loadingDotsInterval = setInterval(() => {
-        dotsElement.textContent = dotsArray[index];
+        console.log("Обновление точек:", dotsArray[index]);
+        if (dotsElement) {
+            dotsElement.textContent = dotsArray[index];
+        } else {
+            console.error("dotsElement не найден.");
+        }
         index = (index + 1) % dotsArray.length;
-    }, 500); // Change every 500ms
+    }, 500);
 };
 
 // Stop the dots animation
@@ -85,6 +93,7 @@ loader.load(
     (gltf) => {
         const model = gltf.scene;
 
+        // Adjust model setup
         model.traverse((child) => {
             if (child.isMesh) {
                 const material = child.material;
@@ -110,6 +119,7 @@ loader.load(
             }
         });
 
+        // Setup model in scene
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
@@ -124,19 +134,18 @@ loader.load(
 
         scene.add(model);
 
+        // Handle animation
         if (gltf.animations && gltf.animations.length > 0) {
             mixer = new THREE.AnimationMixer(model);
             const action = mixer.clipAction(gltf.animations[0]);
             action.play();
         }
 
-        // Убираем загрузочный экран после полной загрузки
+        // Hide loading screen after loading completes
         stopLoadingDotsAnimation();
         loadingScreen.style.display = "none";
     },
-    (xhr) => {
-        loadingMessage.textContent = `LOADING${dotsElement.textContent}`;
-    },
+    null, // No need for additional percentage updates
     (error) => {
         console.error("An error occurred while loading the model:", error);
         loadingMessage.textContent = "Error loading the model.";
