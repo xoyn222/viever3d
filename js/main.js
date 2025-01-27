@@ -114,9 +114,13 @@ loader.load(
         loadingScreen.style.display = "none";
     },
     (xhr) => {
-        // Обновляем текст загрузки
-        const percentLoaded = (xhr.loaded / xhr.total * 100).toFixed(2);
-        loadingMessage.textContent = `${percentLoaded}%`;
+        // Проверяем xhr.total перед вычислением процентов
+        if (xhr.total) {
+            const percentLoaded = (xhr.loaded / xhr.total * 100).toFixed(2);
+            loadingMessage.textContent = `${percentLoaded}%`;
+        } else {
+            loadingMessage.textContent = "Загрузка...";
+        }
     },
     (error) => {
         console.error("An error occurred while loading the model:", error);
