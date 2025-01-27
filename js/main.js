@@ -119,7 +119,7 @@ loader.load(
             const percentLoaded = (xhr.loaded / xhr.total * 100).toFixed(2);
             loadingMessage.textContent = `${percentLoaded}%`;
         } else {
-            loadingMessage.textContent = "%0";
+            loadingMessage.textContent = "0%";
         }
     },
     (error) => {
