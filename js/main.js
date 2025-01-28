@@ -12,7 +12,7 @@ if (typeof Telegram !== "undefined" && Telegram.WebApp) {
 
 // Настройка Three.js сцены
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000); // Чёрный фон сцены
+scene.background = new THREE.Color(0xd10000); // Чёрный фон сцены
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -55,6 +55,8 @@ controls.maxPolarAngle = Math.PI / 2;
 controls.minDistance = 2;
 controls.maxDistance = 4;
 
+controls.enablePan = false;
+
 const loadingScreen = document.getElementById("loading-screen");
 const loadingMessage = document.getElementById("loading-message");
 const dotsElement = document.querySelector(".dots");
@@ -89,11 +91,11 @@ startLoadingDotsAnimation();
 // Загрузка модели
 const loader = new GLTFLoader();
 loader.load(
-    "models/dante04/scene.gltf",
+    "models/dante05/scene.gltf",
     (gltf) => {
         const model = gltf.scene;
 
-        // Adjust model setup
+// Adjust model setup
         model.traverse((child) => {
             if (child.isMesh) {
                 const material = child.material;
@@ -124,7 +126,7 @@ loader.load(
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
         model.position.x -= center.x;
-        model.position.y -= center.y;
+        model.position.y -= 0.75;
         model.position.z -= center.z;
 
         const fov = camera.fov * (Math.PI / 180);

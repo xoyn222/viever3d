@@ -12,16 +12,40 @@ html, body {
   height: 100vh !important;
 }
 
-#bottom-left-links {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  color: #ffffff;
-  font-size: 14px;
-  font-family: "Roboto Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+#overlay-image {
+    position: absolute;
+    top: 5%; /* Расположение картинки над моделью */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10; /* Размещает картинку поверх 3D-сцены */
+    max-width: 100%; /* Максимальная ширина картинки */
+    pointer-events: none; /* Картинка не перехватывает клики */
 }
 
-#bottom-left-links a {
+#bottom-links {
+  width: 100%;
+  position: absolute;
+  bottom: 60px; /* Расположить у нижнего края */
+  left: 50%; /* Центрировать по горизонтали */
+  transform: translateX(-50%); /* Смещаем на половину ширины элемента */
+  color: #ffffff;
+  font-size: 20px;
+  font-family: Calibri, sans-serif;
+  text-align: center; /* Выравнивание текста внутри элемента */
+  z-index: 1000;
+  text-shadow:
+          1px 1px 0 black,
+          -1px 1px 0 black,
+          1px -1px 0 black,
+          -1px -1px 0 black,
+          2px 2px 0 black,
+          -2px 2px 0 black,
+          2px -2px 0 black,
+          -2px -2px 0 black;
+}
+
+
+#bottom-links a {
   color:  #ffffff;
   text-decoration: underline;
   font-weight: bold;
@@ -41,16 +65,25 @@ html, body {
   color: white; /* Цвет текста */
   z-index: 1000; /* Поверх всех элементов */
   font-size: 20px;
+
 }
-
-
-
 
 #loading-message {
   color: white;
-  font-size: 1.5em;
-  font-family: Arial, sans-serif;
+  top: 10px;
+  font-size: 50px;
+  font-family: "Times New Roman", Times, sans-serif;
+  text-shadow:
+          1px 1px 0 red,
+          -1px 1px 0 red,
+          1px -1px 0 red,
+          -1px -1px 0 red,
+          2px 2px 0 red,
+          -2px 2px 0 red,
+          2px -2px 0 red,
+          -2px -2px 0 red;
 }
+
 
 #dots {
   display: inline; /* Ensures the dots are displayed inline */
