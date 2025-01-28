@@ -66,10 +66,11 @@ let loadingDotsInterval;
 
 
 const startLoadingDotsAnimation = () => {
+    console.log("Запуск анимации точек.");
     const dotsArray = ["", ".", "..", "..."];
     let index = 0;
     loadingDotsInterval = setInterval(() => {
-        console.log(dotsArray[index]);
+        console.log("Обновление точек:", dotsArray[index]);
         if (dotsElement) {
             dotsElement.textContent = dotsArray[index];
         } else {
