@@ -63,8 +63,6 @@ const dotsElement = document.querySelector(".dots");
 let loadingDotsInterval;
 
 // Start the circular dots animation
-
-
 const startLoadingDotsAnimation = () => {
     console.log("Запуск анимации точек.");
     const dotsArray = ["", ".", "..", "..."];
@@ -95,7 +93,7 @@ loader.load(
     (gltf) => {
         const model = gltf.scene;
 
-// Adjust model setup
+        // Adjust model setup
         model.traverse((child) => {
             if (child.isMesh) {
                 const material = child.material;
@@ -126,7 +124,7 @@ loader.load(
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
         model.position.x -= center.x;
-        model.position.y -= 0.75;
+        model.position.y -= 1.25;
         model.position.z -= center.z;
 
         const fov = camera.fov * (Math.PI / 180);
@@ -155,6 +153,25 @@ loader.load(
     }
 );
 
+// Variables for inertia effect
+let inertiaRotation = new THREE.Vector2(0, 0); // Holds the current rotational velocity
+const inertiaDecay = 0.95; // Decay factor for the inertia
+const rotationSensitivity = 0.005; // Sensitivity to mouse movement
+let lastMousePosition = new THREE.Vector2(); // Tracks the last mouse position
+
+// Track mouse movement and apply initial inertia
+renderer.domElement.addEventListener("mousemove", (event) => {
+    const mousePosition = new THREE.Vector2(event.clientX, event.clientY);
+    if (lastMousePosition.x || lastMousePosition.y) {
+        const delta = new THREE.Vector2(
+            mousePosition.x - lastMousePosition.x,
+            mousePosition.y - lastMousePosition.y
+        );
+        inertiaRotation.addScaledVector(delta, rotationSensitivity);
+    }
+    lastMousePosition.copy(mousePosition);
+});
+
 // Обработка изменения размера окна
 window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -167,6 +184,26 @@ const clock = new THREE.Clock();
 
 const animate = () => {
     requestAnimationFrame(animate);
+
+    // Apply inertia to camera rotation
+    if (Math.abs(inertiaRotation.x) > 0.0001 || Math.abs(inertiaRotation.y) > 0.0001) {
+        // Modify camera position for horizontal rotation
+        camera.position.applyAxisAngle(
+            new THREE.Vector3(0, 1, 0),
+            -inertiaRotation.x * 0.01 // Adjust multiplier for speed
+        );
+
+        // Modify camera position for vertical rotation (limited by polar angle constraints)
+        const axis = new THREE.Vector3()
+            .setFromMatrixColumn(camera.matrix, 0)
+            .normalize(); // Camera's local X-axis
+        camera.position.applyAxisAngle(axis, -inertiaRotation.y * 0.01);
+
+        camera.lookAt(0, 0, 0); // Ensure the camera keeps looking at the model
+
+        // Decay the inertia over time
+        inertiaRotation.multiplyScalar(inertiaDecay);
+    }
 
     if (mixer) {
         const delta = clock.getDelta();
