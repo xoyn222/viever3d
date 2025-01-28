@@ -2,13 +2,6 @@ import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module
 import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
 
-// Инициализация Telegram WebApp
-if (typeof Telegram !== "undefined" && Telegram.WebApp) {
-    Telegram.WebApp.ready(); // Сообщаем Telegram, что WebApp готов
-    Telegram.WebApp.expand(); // Расширяем WebApp на весь экран
-} else {
-    console.warn("Telegram WebApp API не доступен. Проверьте окружение.");
-}
 
 // Настройка Three.js сцены
 const scene = new THREE.Scene();
